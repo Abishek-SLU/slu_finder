@@ -1,22 +1,21 @@
-
 import { useState } from "react";
 import {
-  View,
-  Text,
-  TextInput,
-  Pressable,
-  StyleSheet,
   Alert,
   Platform,
-  ScrollView,
-  ActivityIndicator,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
 
 import { router } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
 
-import { sendOtp } from "@/services/authService";
+import { AppButton, AppInput } from "../components/AppUI";
+import AuthShell from "../components/AuthShell";
+import { colors } from "../theme/colors";
+
 import { useRegistration } from "@/context/registration-context";
+import { sendOtp } from "@/services/authService";
 
 function showMessage(title: string, message: string) {
   if (Platform.OS === "web") {
@@ -27,27 +26,18 @@ function showMessage(title: string, message: string) {
 }
 
 export default function RegisterScreen() {
-  const { pendingRegistration, setPendingRegistration } =
-    useRegistration();
+  const { pendingRegistration, setPendingRegistration } = useRegistration();
 
-  const [name, setName] = useState(
-    pendingRegistration?.fullName || ""
-  );
+  const [name, setName] = useState(pendingRegistration?.fullName || "");
 
-  const [username, setUsername] = useState(
-    pendingRegistration?.userName || ""
-  );
+  const [username, setUsername] = useState(pendingRegistration?.userName || "");
 
-  const [email, setEmail] = useState(
-    pendingRegistration?.email || ""
-  );
+  const [email, setEmail] = useState(pendingRegistration?.email || "");
 
-  const [password, setPassword] = useState(
-    pendingRegistration?.password || ""
-  );
+  const [password, setPassword] = useState(pendingRegistration?.password || "");
 
   const [confirmPassword, setConfirmPassword] = useState(
-    pendingRegistration?.password || ""
+    pendingRegistration?.password || "",
   );
 
   const [loading, setLoading] = useState(false);
@@ -72,18 +62,12 @@ export default function RegisterScreen() {
     }
 
     if (!/^[A-Za-z0-9._]{3,30}$/.test(username.trim())) {
-      showMessage(
-        "Error",
-        "Username must be 3 to 30 characters"
-      );
+      showMessage("Error", "Username must be 3 to 30 characters");
       return;
     }
 
     if (password.length < 8) {
-      showMessage(
-        "Error",
-        "Password must be at least 8 characters"
-      );
+      showMessage("Error", "Password must be at least 8 characters");
       return;
     }
 
@@ -108,9 +92,7 @@ export default function RegisterScreen() {
     } catch (error) {
       showMessage(
         "Registration Error",
-        error instanceof Error
-          ? error.message
-          : "Unable to send OTP"
+        error instanceof Error ? error.message : "Unable to send OTP",
       );
     } finally {
       setLoading(false);
@@ -118,164 +100,191 @@ export default function RegisterScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView
-        contentContainerStyle={styles.content}
-        keyboardShouldPersistTaps="handled"
+    <AuthShell
+      eyebrow="Join the community"
+      title="Create account."
+      description="Your campus journey starts here. Sign up with your SLU email to find your people."
+    >
+      <AppInput
+        label="Full Name"
+        placeholder="Enter your full name"
+        value={name}
+        onChangeText={setName}
+        autoCapitalize="words"
+        autoComplete="name"
+        editable={!loading}
+      />
+
+      <AppInput
+        label="Username"
+        placeholder="Choose a username"
+        value={username}
+        onChangeText={setUsername}
+        autoCapitalize="none"
+        autoComplete="username"
+        editable={!loading}
+      />
+
+      <AppInput
+        label="SLU Email"
+        placeholder="yourname@slu.edu"
+        value={email}
+        onChangeText={setEmail}
+        keyboardType="email-address"
+        autoCapitalize="none"
+        autoComplete="email"
+        editable={!loading}
+      />
+
+      <View style={styles.emailHint}>
+        <Text style={styles.hintIcon}>✦</Text>
+
+        <Text style={styles.hintText}>
+          Only Saint Louis University email addresses (@slu.edu) are accepted.
+        </Text>
+      </View>
+
+      <AppInput
+        label="Password"
+        placeholder="Create a password"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+        autoComplete="new-password"
+        editable={!loading}
+      />
+
+      <Text style={styles.passwordHint}>Use at least 8 characters.</Text>
+
+      <AppInput
+        label="Confirm Password"
+        placeholder="Re-enter your password"
+        value={confirmPassword}
+        onChangeText={setConfirmPassword}
+        secureTextEntry
+        autoComplete="new-password"
+        editable={!loading}
+        onSubmitEditing={() => {
+          if (!loading) {
+            void handleRegister();
+          }
+        }}
+      />
+
+      <View style={styles.buttonWrap}>
+        <AppButton
+          title="Create Account →"
+          variant="accent"
+          onPress={handleRegister}
+          loading={loading}
+        />
+      </View>
+
+      <Text style={styles.verificationNote}>
+        We'll send a 4-digit verification code to your SLU email before creating
+        your account.
+      </Text>
+
+      <View style={styles.separator}>
+        <View style={styles.line} />
+        <Text style={styles.orText}>ALREADY A MEMBER?</Text>
+        <View style={styles.line} />
+      </View>
+
+      <Pressable
+        onPress={() => router.replace("/login")}
+        disabled={loading}
+        style={styles.loginLinkButton}
       >
-        <View style={styles.form}>
-          <Text style={styles.logo}>SLU Finder</Text>
-
-          <Text style={styles.title}>Create Account</Text>
-
-          <Text style={styles.subtitle}>
-            Join the SLU student community
-          </Text>
-
-          <Text style={styles.label}>Full Name</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter full name"
-            value={name}
-            onChangeText={setName}
-            autoCapitalize="words"
-          />
-
-          <Text style={styles.label}>Username</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Choose a username"
-            value={username}
-            onChangeText={setUsername}
-            autoCapitalize="none"
-          />
-
-          <Text style={styles.label}>SLU Email</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="yourname@slu.edu"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            autoComplete="email"
-          />
-
-          <Text style={styles.label}>Password</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Create password"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            autoComplete="new-password"
-          />
-
-          <Text style={styles.label}>Confirm Password</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Confirm password"
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            secureTextEntry
-          />
-
-          <Pressable
-            style={[
-              styles.button,
-              loading && styles.disabledButton,
-            ]}
-            onPress={handleRegister}
-            disabled={loading}
-          >
-            {loading ? (
-              <ActivityIndicator color="#FFFFFF" />
-            ) : (
-              <Text style={styles.buttonText}>
-                Create Account
-              </Text>
-            )}
-          </Pressable>
-
-          <Pressable
-            onPress={() => router.replace("/login")}
-            disabled={loading}
-          >
-            <Text style={styles.link}>
-              Already have an account? Login
-            </Text>
-          </Pressable>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+        <Text style={styles.loginText}>
+          Already have an account?{" "}
+          <Text style={styles.loginLink}>Log in →</Text>
+        </Text>
+      </Pressable>
+    </AuthShell>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#FFFFFF",
-  },
-  content: {
-    flexGrow: 1,
-    justifyContent: "center",
-    padding: 24,
-  },
-  form: {
-    width: "100%",
-    maxWidth: 420,
-    alignSelf: "center",
-  },
-  logo: {
-    fontSize: 23,
-    fontWeight: "bold",
-    color: "#003DA5",
-    textAlign: "center",
-    marginBottom: 25,
-  },
-  title: {
-    fontSize: 30,
-    fontWeight: "bold",
-    color: "#14233B",
-    marginBottom: 10,
-  },
-  subtitle: {
-    fontSize: 15,
-    color: "#64748B",
-    marginBottom: 25,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: "600",
-    marginBottom: 8,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#CBD5E1",
-    borderRadius: 10,
-    padding: 15,
-    marginBottom: 16,
-    fontSize: 16,
-  },
-  button: {
-    backgroundColor: "#003DA5",
-    padding: 17,
-    borderRadius: 10,
+  emailHint: {
+    flexDirection: "row",
     alignItems: "center",
-    marginTop: 8,
+    gap: 10,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 10,
+    padding: 13,
+    marginTop: -4,
+    marginBottom: 18,
   },
-  disabledButton: {
-    opacity: 0.6,
+
+  hintIcon: {
+    color: colors.accent,
+    fontSize: 17,
+    fontWeight: "800",
   },
-  buttonText: {
-    color: "#FFFFFF",
-    fontSize: 16,
-    fontWeight: "bold",
+
+  hintText: {
+    flex: 1,
+    color: colors.textSecondary,
+    fontSize: 12,
+    lineHeight: 19,
   },
-  link: {
-    color: "#003DA5",
+
+  passwordHint: {
+    color: colors.textMuted,
+    fontSize: 12,
+    marginTop: -10,
+    marginBottom: 16,
+  },
+
+  buttonWrap: {
+    marginTop: 12,
+  },
+
+  verificationNote: {
+    color: colors.textMuted,
+    fontSize: 12,
+    lineHeight: 20,
     textAlign: "center",
-    marginTop: 25,
-    fontWeight: "600",
+    marginTop: 18,
+  },
+
+  separator: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    marginTop: 30,
+    marginBottom: 18,
+  },
+
+  line: {
+    flex: 1,
+    height: 1,
+    backgroundColor: colors.border,
+  },
+
+  orText: {
+    color: colors.textMuted,
+    fontSize: 10,
+    fontWeight: "700",
+    letterSpacing: 1,
+  },
+
+  loginLinkButton: {
+    alignItems: "center",
+    paddingVertical: 12,
+  },
+
+  loginText: {
+    color: colors.textSecondary,
+    fontSize: 14,
+    textAlign: "center",
+  },
+
+  loginLink: {
+    color: colors.accent,
+    fontWeight: "800",
   },
 });

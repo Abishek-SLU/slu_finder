@@ -1,285 +1,292 @@
 import { router } from "expo-router";
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  useWindowDimensions,
-  View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { StyleSheet, Text, View, useWindowDimensions } from "react-native";
 
-import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
-import { BottomTabInset } from "@/constants/theme";
-import { useTheme } from "@/hooks/use-theme";
-import { Platform } from "react-native";
+import { AppButton, AppCard } from "../components/AppUI";
+import ResponsiveScreen from "../components/ResponsiveScreen";
+import { colors } from "../theme/colors";
 
-const interests = ["Music", "Gaming", "Hiking"];
-
-export default function HomeScreen() {
-  const theme = useTheme();
-  const { width, fontScale } = useWindowDimensions();
-  const isWide = width >= 960 && fontScale <= 1.3;
+export default function LandingScreen() {
+  const { width } = useWindowDimensions();
+  const desktop = width >= 900;
 
   return (
-    <ThemedView style={styles.screen}>
-      <SafeAreaView style={styles.screen}>
-        <ScrollView
-          contentContainerStyle={[styles.content, isWide && styles.contentWide]}
-        >
-          <View style={[styles.layout, isWide && styles.layoutWide]}>
-            <View style={[styles.hero, isWide && styles.heroWide]}>
-              <ThemedText
-                themeColor="accent"
-                type="smallBold"
-                style={styles.eyebrow}
-              >
-                YOUR CAMPUS. YOUR COMMUNITY.
-              </ThemedText>
-
-              <ThemedText
-                accessibilityRole="header"
-                type="title"
-                style={[styles.heading, isWide && styles.headingWide]}
-              >
-                Find your{"\n"}people.
-              </ThemedText>
-
-              <ThemedText themeColor="textSecondary" style={styles.description}>
-                Meet SLU students who share your interests. Turn a shared hobby
-                into a new connection.
-              </ThemedText>
-
-              <View style={styles.interests}>
-                {interests.map((interest) => (
-                  <ThemedView
-                    key={interest}
-                    type="backgroundSelected"
-                    style={styles.chip}
-                  >
-                    <ThemedText type="small">{interest}</ThemedText>
-                  </ThemedView>
-                ))}
-              </View>
-
-              <Pressable
-                accessibilityRole="button"
-                onPress={() => router.push("/login")}
-                style={({ pressed }) => [
-                  styles.button,
-                  { backgroundColor: theme.primary },
-                  isWide && styles.buttonWide,
-                  pressed && styles.pressed,
-                ]}
-              >
-                <ThemedText themeColor="onPrimary" style={styles.buttonText}>
-                  Get started
-                </ThemedText>
-              </Pressable>
-            </View>
-
-            <ThemedView
-              type="backgroundElement"
-              style={[
-                styles.preview,
-                { borderColor: theme.border },
-                isWide && styles.previewWide,
-              ]}
-            >
-              <ThemedText
-                themeColor="textSecondary"
-                type="smallBold"
-                style={styles.eyebrow}
-              >
-                A LOOK INSIDE
-              </ThemedText>
-
-              <ThemedText style={styles.previewHeading}>
-                It starts with{"\n"}something in common.
-              </ThemedText>
-
-              <ThemedView type="backgroundSelected" style={styles.example}>
-                <ThemedText themeColor="accent" type="smallBold">
-                  SHARED INTERESTS
-                </ThemedText>
-
-                <ThemedText style={styles.exampleTitle}>
-                  A trail. A playlist.{"\n"}A conversation.
-                </ThemedText>
-
-                <ThemedText themeColor="textSecondary">
-                  Discover connections through the things you enjoy.
-                </ThemedText>
-              </ThemedView>
-
-              <View style={styles.steps}>
-                <Feature
-                  number="01"
-                  title="Discover"
-                  description="Find students with shared interests."
-                />
-                <Feature
-                  number="02"
-                  title="Connect"
-                  description="Send a request to introduce yourself."
-                />
-                <Feature
-                  number="03"
-                  title="Chat"
-                  description="Start talking when you both agree."
-                />
-              </View>
-
-              <ThemedText themeColor="textSecondary" type="small">
-                Preview of the experience we’re building.
-              </ThemedText>
-            </ThemedView>
+    <ResponsiveScreen>
+      <View style={styles.nav}>
+        <View style={styles.logoRow}>
+          <View style={styles.logoMark}>
+            <Text style={styles.logoMarkText}>S</Text>
           </View>
-        </ScrollView>
-      </SafeAreaView>
-    </ThemedView>
-  );
-}
 
-type FeatureProps = {
-  number: string;
-  title: string;
-  description: string;
-};
+          <Text style={styles.brand}>SLU Finder</Text>
+        </View>
 
-function Feature({ number, title, description }: FeatureProps) {
-  return (
-    <View style={styles.feature}>
-      <ThemedText themeColor="accent" type="smallBold">
-        {number}
-      </ThemedText>
-
-      <View style={styles.featureText}>
-        <ThemedText type="smallBold">{title}</ThemedText>
-        <ThemedText themeColor="textSecondary" type="small">
-          {description}
-        </ThemedText>
+        <Text style={styles.navLabel}>BUILT FOR SLU STUDENTS</Text>
       </View>
-    </View>
+
+      <View
+        style={[styles.hero, { flexDirection: desktop ? "row" : "column" }]}
+      >
+        <View style={styles.heroContent}>
+          <Text style={styles.eyebrow}>YOUR CAMPUS. YOUR COMMUNITY.</Text>
+
+          <Text style={[styles.heroTitle, { fontSize: desktop ? 68 : 44 }]}>
+            Find your{"\n"}
+            <Text style={styles.accent}>people.</Text>
+          </Text>
+
+          <Text style={styles.description}>
+            Meet students who share your interests, discover campus connections,
+            and make your university experience better.
+          </Text>
+
+          <View style={styles.action}>
+            <AppButton
+              title="Get Started  →"
+              variant="accent"
+              onPress={() => router.push("/login")}
+            />
+          </View>
+
+          <Text style={styles.smallText}>
+            Made for the Saint Louis University community.
+          </Text>
+        </View>
+
+        <View style={styles.heroVisual}>
+          <View style={styles.visualHeader}>
+            <View style={styles.statusDot} />
+            <Text style={styles.visualHeaderText}>YOUR COMMUNITY</Text>
+          </View>
+
+          <Text style={styles.visualTitle}>Better together.</Text>
+
+          <View style={styles.visualCard}>
+            <Text style={styles.visualEmoji}>🎓</Text>
+            <View style={styles.visualText}>
+              <Text style={styles.visualName}>SLU Students</Text>
+              <Text style={styles.visualSub}>Connect across campus</Text>
+            </View>
+          </View>
+
+          <View style={styles.visualCard}>
+            <Text style={styles.visualEmoji}>🎮</Text>
+            <View style={styles.visualText}>
+              <Text style={styles.visualName}>Shared Interests</Text>
+              <Text style={styles.visualSub}>Find people like you</Text>
+            </View>
+          </View>
+
+          <View style={styles.visualCard}>
+            <Text style={styles.visualEmoji}>✨</Text>
+            <View style={styles.visualText}>
+              <Text style={styles.visualName}>New Connections</Text>
+              <Text style={styles.visualSub}>Start your campus journey</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+
+      <View
+        style={[styles.features, { flexDirection: desktop ? "row" : "column" }]}
+      >
+        <View style={styles.feature}>
+          <AppCard>
+            <Text style={styles.featureIcon}>01 /</Text>
+            <Text style={styles.featureTitle}>Create your profile</Text>
+            <Text style={styles.featureDesc}>
+              Introduce yourself to your campus community.
+            </Text>
+          </AppCard>
+        </View>
+
+        <View style={styles.feature}>
+          <AppCard>
+            <Text style={styles.featureIcon}>02 /</Text>
+            <Text style={styles.featureTitle}>Choose interests</Text>
+            <Text style={styles.featureDesc}>
+              Share the things you enjoy and care about.
+            </Text>
+          </AppCard>
+        </View>
+
+        <View style={styles.feature}>
+          <AppCard>
+            <Text style={styles.featureIcon}>03 /</Text>
+            <Text style={styles.featureTitle}>Discover community</Text>
+            <Text style={styles.featureDesc}>
+              Build meaningful connections at SLU.
+            </Text>
+          </AppCard>
+        </View>
+      </View>
+    </ResponsiveScreen>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-  },
-  content: {
-    flexGrow: 1,
-    paddingHorizontal: 24,
-    paddingTop: 40,
-    paddingBottom: Platform.OS === "web" ? 40 : BottomTabInset + 24,
-  },
-  contentWide: {
-    justifyContent: "center",
-    paddingVertical: 64,
-    paddingHorizontal: 40,
-  },
-  layout: {
+  nav: {
     width: "100%",
-    maxWidth: 560,
-    alignSelf: "center",
-    gap: 40,
-  },
-  layoutWide: {
-    maxWidth: 1120,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 64,
-  },
-  hero: {
-    gap: 24,
-  },
-  heroWide: {
-    flex: 1,
-    minWidth: 0,
-  },
-  eyebrow: {
-    letterSpacing: 1.5,
-  },
-  heading: {
-    fontSize: 48,
-    lineHeight: 54,
-    fontWeight: "700",
-  },
-  headingWide: {
-    fontSize: 72,
-    lineHeight: 78,
-  },
-  description: {
-    fontSize: 18,
-    lineHeight: 28,
-    maxWidth: 460,
-  },
-  interests: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 8,
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 12,
+    paddingBottom: 28,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
   },
-  chip: {
-    borderRadius: 24,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+  logoRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
   },
-  button: {
-    minHeight: 56,
-    borderRadius: 14,
+  logoMark: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    backgroundColor: colors.accent,
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 32,
-    paddingVertical: 16,
-    marginTop: 8,
   },
-  buttonWide: {
-    alignSelf: "flex-start",
-    minWidth: 200,
+  logoMarkText: {
+    fontSize: 24,
+    fontWeight: "900",
+    color: colors.background,
   },
-  buttonText: {
-    fontWeight: "700",
+  brand: {
+    color: colors.text,
+    fontSize: 22,
+    fontWeight: "800",
   },
-  pressed: {
-    opacity: 0.8,
+  navLabel: {
+    color: colors.textMuted,
+    fontSize: 11,
+    letterSpacing: 1.5,
   },
-  preview: {
-    borderWidth: 1,
-    borderRadius: 28,
-    padding: 24,
-    gap: 24,
+  hero: {
+    alignItems: "center",
+    gap: 48,
+    paddingTop: 70,
+    paddingBottom: 90,
+    width: "100%",
   },
-  previewWide: {
+  heroContent: {
     flex: 1,
-    minWidth: 0,
-    padding: 32,
+    width: "100%",
   },
-  previewHeading: {
-    fontSize: 28,
-    lineHeight: 36,
-    fontWeight: "700",
+  eyebrow: {
+    color: colors.accent,
+    fontSize: 12,
+    fontWeight: "800",
+    letterSpacing: 2,
+    marginBottom: 24,
   },
-  example: {
-    borderRadius: 18,
-    padding: 24,
+  heroTitle: {
+    color: colors.text,
+    fontWeight: "900",
+    lineHeight: 76,
+  },
+  accent: {
+    color: colors.accent,
+  },
+  description: {
+    fontSize: 17,
+    lineHeight: 29,
+    color: colors.textSecondary,
+    marginTop: 20,
+    maxWidth: 510,
+  },
+  action: {
+    marginTop: 35,
+    maxWidth: 240,
+  },
+  smallText: {
+    color: colors.textMuted,
+    fontSize: 12,
+    marginTop: 20,
+  },
+  heroVisual: {
+    flex: 1,
+    width: "100%",
+    maxWidth: 560,
+    backgroundColor: colors.primary,
+    borderRadius: 28,
+    padding: 28,
     gap: 16,
   },
-  exampleTitle: {
-    fontSize: 24,
-    lineHeight: 32,
-    fontWeight: "600",
+  visualHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
   },
-  steps: {
-    gap: 20,
+  statusDot: {
+    width: 9,
+    height: 9,
+    borderRadius: 5,
+    backgroundColor: colors.accent,
+  },
+  visualHeaderText: {
+    color: colors.text,
+    fontSize: 11,
+    fontWeight: "800",
+    letterSpacing: 2,
+  },
+  visualTitle: {
+    fontSize: 34,
+    fontWeight: "900",
+    color: colors.text,
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  visualCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF18",
+    borderWidth: 1,
+    borderColor: "#FFFFFF25",
+    borderRadius: 15,
+    padding: 18,
+    gap: 15,
+  },
+  visualEmoji: {
+    fontSize: 30,
+  },
+  visualText: {
+    flex: 1,
+  },
+  visualName: {
+    color: colors.text,
+    fontSize: 17,
+    fontWeight: "700",
+  },
+  visualSub: {
+    color: "#D4E2FF",
+    fontSize: 13,
+    marginTop: 4,
+  },
+  features: {
+    width: "100%",
+    gap: 18,
   },
   feature: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    gap: 16,
-  },
-  featureText: {
     flex: 1,
-    gap: 4,
+    minWidth: 0,
+  },
+  featureIcon: {
+    color: colors.accent,
+    fontSize: 14,
+    fontWeight: "800",
+    marginBottom: 18,
+  },
+  featureTitle: {
+    color: colors.text,
+    fontSize: 19,
+    fontWeight: "700",
+    marginBottom: 10,
+  },
+  featureDesc: {
+    color: colors.textSecondary,
+    fontSize: 14,
+    lineHeight: 22,
   },
 });

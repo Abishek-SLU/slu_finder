@@ -28,6 +28,12 @@ export default function RootLayout() {
           <Stack.Screen name="student-home" options={{ headerShown: false }} />
 
           <Stack.Screen name="explore" options={{ headerShown: false }} />
+          <Stack.Screen name="edit-profile" options={{ headerShown: false }} />
+
+          <Stack.Screen
+            name="select-interests"
+            options={{ headerShown: false }}
+          />
         </Stack>
       </RegistrationProvider>
     </ThemeProvider>
