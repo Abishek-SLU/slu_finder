@@ -92,7 +92,7 @@ export default function SelectInterestsScreen() {
 
       await saveMyInterests(selectedIds);
 
-      router.back();
+      router.dismissTo("/student-home");
     } catch (err) {
       setError(
         err instanceof Error
@@ -107,7 +107,7 @@ export default function SelectInterestsScreen() {
   return (
     <ResponsiveScreen>
       <Pressable
-        onPress={() => router.back()}
+        onPress={() => router.dismissTo("/student-home")}
         style={styles.back}
       >
         <Text style={styles.backText}>
@@ -194,7 +194,7 @@ export default function SelectInterestsScreen() {
               <AppButton
                 title="Cancel"
                 variant="outline"
-                onPress={() => router.back()}
+                onPress={() => router.dismissTo("/student-home")}
                 disabled={saving}
               />
             </View>

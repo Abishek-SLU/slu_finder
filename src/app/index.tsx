@@ -1,3 +1,5 @@
+import StaggerEntrance from "../components/StaggerEntrance";
+import PageEntrance from "../components/PageEntrance";
 import { router } from "expo-router";
 import { StyleSheet, Text, View, useWindowDimensions } from "react-native";
 
@@ -10,8 +12,8 @@ export default function LandingScreen() {
   const desktop = width >= 900;
 
   return (
-    <ResponsiveScreen>
-      <View style={styles.nav}>
+    <ResponsiveScreen stagger={false}>
+      <PageEntrance direction="bottom" style={styles.nav}>
         <View style={styles.logoRow}>
           <View style={styles.logoMark}>
             <Text style={styles.logoMarkText}>S</Text>
@@ -21,12 +23,12 @@ export default function LandingScreen() {
         </View>
 
         <Text style={styles.navLabel}>BUILT FOR SLU STUDENTS</Text>
-      </View>
+      </PageEntrance>
 
       <View
         style={[styles.hero, { flexDirection: desktop ? "row" : "column" }]}
       >
-        <View style={styles.heroContent}>
+        <StaggerEntrance directions={["bottom"]} style={styles.heroContent}>
           <Text style={styles.eyebrow}>YOUR CAMPUS. YOUR COMMUNITY.</Text>
 
           <Text style={[styles.heroTitle, { fontSize: desktop ? 68 : 44 }]}>
@@ -43,16 +45,16 @@ export default function LandingScreen() {
             <AppButton
               title="Get Started  →"
               variant="accent"
-              onPress={() => router.push("/login")}
+              onPress={() => router.replace("/login")}
             />
           </View>
 
           <Text style={styles.smallText}>
             Made for the Saint Louis University community.
           </Text>
-        </View>
+        </StaggerEntrance>
 
-        <View style={styles.heroVisual}>
+        <StaggerEntrance directions={["bottom"]} style={styles.heroVisual}>
           <View style={styles.visualHeader}>
             <View style={styles.statusDot} />
             <Text style={styles.visualHeaderText}>YOUR COMMUNITY</Text>
@@ -83,10 +85,10 @@ export default function LandingScreen() {
               <Text style={styles.visualSub}>Start your campus journey</Text>
             </View>
           </View>
-        </View>
+        </StaggerEntrance>
       </View>
 
-      <View
+      <StaggerEntrance directions={["bottom"]}
         style={[styles.features, { flexDirection: desktop ? "row" : "column" }]}
       >
         <View style={styles.feature}>
@@ -118,7 +120,7 @@ export default function LandingScreen() {
             </Text>
           </AppCard>
         </View>
-      </View>
+      </StaggerEntrance>
     </ResponsiveScreen>
   );
 }

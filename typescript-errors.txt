@@ -1,0 +1,5 @@
+src/app/explore.tsx(22,3): error TS2305: Module '"../services/studentService"' has no exported member 'DiscoveredStudent'.
+src/app/explore.tsx(23,3): error TS2305: Module '"../services/studentService"' has no exported member 'discoverStudents'.
+src/app/explore.tsx(190,59): error TS7006: Parameter 'interest' implicitly has an 'any' type.
+src/components/WatermarkBackground.tsx(52,23): error TS2304: Cannot find name 'requireToken'.
+src/components/WatermarkBackground.tsx(54,10): error TS2552: Cannot find name 'apiRequest'. Did you mean 'Request'?

@@ -96,3 +96,26 @@ export async function saveMyInterests(
         token
     );
 }
+export type DiscoveredStudent = {
+    userId: string;
+    userName: string;
+    fullName: string;
+    program: string | null;
+    major: string | null;
+    academicYear: string | null;
+    bio: string | null;
+    profileImageUrl: string | null;
+    sharedInterestCount: number;
+    sharedInterests: string[];
+};
+
+export async function discoverStudents(): Promise<DiscoveredStudent[]> {
+    const token = await requireToken();
+
+    return apiRequest<DiscoveredStudent[]>(
+        "/api/student/discover",
+        "GET",
+        undefined,
+        token
+    );
+}
