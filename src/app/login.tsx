@@ -55,7 +55,6 @@ export default function LoginScreen() {
 
       await saveToken(result.jwt);
 
-      router.replace("/student-home");
     } catch (error) {
       showMessage(
         "Login Failed",
@@ -120,7 +119,7 @@ export default function LoginScreen() {
         style={styles.registerButton}
       >
         <Text style={styles.registerText}>
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Text style={styles.registerLink}>
             Create one →
           </Text>

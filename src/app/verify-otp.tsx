@@ -151,7 +151,7 @@ export default function VerifyOtpScreen() {
       </View>
 
       <View style={styles.resendRow}>
-        <Text style={styles.resendText}>Didn't receive the code?</Text>
+        <Text style={styles.resendText}>Didn&apos;t receive the code?</Text>
 
         <Pressable onPress={handleResend} disabled={loading || !email}>
           <Text

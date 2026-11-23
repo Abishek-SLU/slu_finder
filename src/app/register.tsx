@@ -181,7 +181,7 @@ export default function RegisterScreen() {
       </View>
 
       <Text style={styles.verificationNote}>
-        We'll send a 4-digit verification code to your SLU email before creating
+        We&apos;ll send a 4-digit verification code to your SLU email before creating
         your account.
       </Text>
 

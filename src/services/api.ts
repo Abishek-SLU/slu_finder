@@ -1,3 +1,4 @@
+import { clearToken, isTokenValid } from "./authSession";
 
 const API_BASE_URL =
     process.env.EXPO_PUBLIC_API_URL || "http://localhost:8080";
@@ -8,6 +9,10 @@ export async function apiRequest<T>(
     body?: object,
     token?: string
 ): Promise<T> {
+    if (token !== undefined && !isTokenValid(token)) {
+        await clearToken(token);
+        throw new Error("Your session has expired. Please log in again.");
+    }
     let response: Response;
 
     try {
@@ -25,6 +30,10 @@ export async function apiRequest<T>(
         );
     }
 
+    if (response.status === 401 && token) {
+        await clearToken(token);
+        throw new Error("Your session has expired. Please log in again.");
+    }
     const rawText = await response.text();
 
     let result: any = {};

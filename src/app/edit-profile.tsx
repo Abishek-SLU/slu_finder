@@ -75,7 +75,7 @@ export default function EditProfileScreen() {
         profileImageUrl: profile?.profileImageUrl || null,
       });
 
-      router.back();
+      router.dismissTo("/student-home");
     } catch (err) {
       setError(
         err instanceof Error
@@ -91,7 +91,7 @@ export default function EditProfileScreen() {
     <ResponsiveScreen variant="form">
       <Pressable
         style={styles.back}
-        onPress={() => router.back()}
+        onPress={() => router.dismissTo("/student-home")}
       >
         <Text style={styles.backText}>
           ← Back to Dashboard
@@ -191,7 +191,7 @@ export default function EditProfileScreen() {
             <AppButton
               title="Cancel"
               variant="outline"
-              onPress={() => router.back()}
+              onPress={() => router.dismissTo("/student-home")}
               disabled={saving}
             />
           </View>

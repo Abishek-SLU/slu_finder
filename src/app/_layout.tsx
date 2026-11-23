@@ -1,41 +1,45 @@
-import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from "expo-router";
-
+import { DarkTheme, Stack, ThemeProvider } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useColorScheme } from "react-native";
-
+import { ActivityIndicator, View } from "react-native";
 import { AnimatedSplashOverlay } from "@/components/animated-icon";
 import { RegistrationProvider } from "@/context/registration-context";
+import { AuthProvider, useAuth } from "@/context/auth-context";
+import { colors } from "@/theme/colors";
 
-SplashScreen.preventAutoHideAsync();
+void SplashScreen.preventAutoHideAsync();
+
+function Navigation() {
+  const { token, loading } = useAuth();
+  if (loading) {
+    return <View style={{ flex: 1, backgroundColor: colors.background, justifyContent: "center" }}><ActivityIndicator color={colors.accent} accessibilityLabel="Loading session" /></View>;
+  }
+  return (
+    <>
+      <AnimatedSplashOverlay />
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Protected guard={!token} redirectTo="/student-home">
+          <Stack.Screen name="index" />
+          <Stack.Screen name="login" />
+          <Stack.Screen name="register" />
+          <Stack.Screen name="verify-otp" />
+        </Stack.Protected>
+        <Stack.Protected guard={!!token} redirectTo="/login">
+          <Stack.Screen name="student-home" />
+          <Stack.Screen name="explore" />
+          <Stack.Screen name="edit-profile" />
+          <Stack.Screen name="select-interests" />
+        </Stack.Protected>
+      </Stack>
+    </>
+  );
+}
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <RegistrationProvider>
-        <AnimatedSplashOverlay />
-
-        <Stack>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-
-          <Stack.Screen name="login" options={{ headerShown: false }} />
-
-          <Stack.Screen name="register" options={{ headerShown: false }} />
-
-          <Stack.Screen name="verify-otp" options={{ headerShown: false }} />
-
-          <Stack.Screen name="student-home" options={{ headerShown: false }} />
-
-          <Stack.Screen name="explore" options={{ headerShown: false }} />
-          <Stack.Screen name="edit-profile" options={{ headerShown: false }} />
-
-          <Stack.Screen
-            name="select-interests"
-            options={{ headerShown: false }}
-          />
-        </Stack>
-      </RegistrationProvider>
+    <ThemeProvider value={DarkTheme}>
+      <AuthProvider>
+        <RegistrationProvider><Navigation /></RegistrationProvider>
+      </AuthProvider>
     </ThemeProvider>
   );
 }

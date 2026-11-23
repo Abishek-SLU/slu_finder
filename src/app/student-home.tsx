@@ -65,7 +65,6 @@ export default function StudentHome() {
 
   async function logout() {
     await clearToken();
-    router.replace("/login");
   }
 
   return (
